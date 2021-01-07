@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Data by day : {{ date.date() }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+
+    <style>
+        .container {
+            height: 400px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>User agents data</h2>
+
+<div class="container" id="user-agents"></div>
+
+<h2>Requests totals</h2>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            Type of traffic
+        </th>
+        <th>
+            Hits
+        </th>
+        <th>
+            Pages viewed
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for traffic_type in TRAFFIC_TYPES %}
+        <tr>
+            <td>{{ traffic_type }}</td>
+            <td>{{ day_data[traffic_type]["hits"] }}</td>
+            <td>{{ day_data[traffic_type]["pages"] }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<h2>Status codes</h2>
+
+
+{% for traffic_type in TRAFFIC_TYPES %}
+    <h3>{{ traffic_type }}</h3>
+
+    {% set sorted_status = day_data[traffic_type]["status"] %}
+
+    <table class="table">
+        <thead>
+        <tr>
+            {% for code in sorted_status.keys() %}
+                <th>
+                    {{ code }}
+                </th>
+            {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            {% for requests in sorted_status.values() %}
+                <td>
+                    {{ requests }}
+                </td>
+            {% endfor %}
+        </tr>
+        </tbody>
+    </table>
+{% endfor %}
+
+<h2>More data</h2>
+
+Back to <a href="index.html">the month</a> or see the <a href="{{ day }}.json">raw data</a>
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+<script>
+    Highcharts.chart('user-agents', {{ ua_tops|tojson }});
+</script>
+</body>
+</html>
