@@ -270,7 +270,6 @@ def get_ua_chart(ua_tops):
 
 
 def get_traffic_data(days_datas):
-
     series = [{
             'name': traffic_type,
             'visible': traffic_type != "bots",
