@@ -273,6 +273,7 @@ def get_traffic_data(days_datas):
 
     series = [{
             'name': traffic_type,
+            'visible': traffic_type != "bots",
             'data': []
         } for traffic_type in TRAFFIC_TYPES]
 
