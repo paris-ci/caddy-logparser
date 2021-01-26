@@ -32,7 +32,7 @@ env = Environment(
 LOGS_FILES = [Path("./logs/access.log")]
 OUTPUT_DIR = Path("./local")
 LAST_RUN_FILE = OUTPUT_DIR / Path("parser_data.json")
-BOTS_UA = ["curl", "bot"]
+BOTS_UA = ["curl", "bot", "statping", "spider", "crawler", "bing", "http"]
 TRAFFIC_TYPES = ["google", "bots", "users"]
 
 COLLECT_COUNTERS = {
@@ -220,7 +220,7 @@ def get_ua_chart(ua_tops):
     for user_agent, count in ua_tops.items():
         parsed = parse_ua(user_agent)
 
-        if parsed.is_bot:
+        if parsed.is_bot or user_agent == "Statping":
             ua_type = "bot"
         elif parsed.is_pc:
             ua_type = "pc"
