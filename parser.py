@@ -400,8 +400,11 @@ def main():
         print("Updating HTMLs...")
         update_htmls(to_update)
 
-    with open(LAST_RUN_FILE, "w") as f:
-        json.dump(last_run, f)
+    if last_run["last_timestamp"] is None:
+        print("Nothing done, aborting")
+    else:
+        with open(LAST_RUN_FILE, "w") as f:
+            json.dump(last_run, f)
 
 
 if __name__ == "__main__":
