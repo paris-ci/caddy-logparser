@@ -66,6 +66,8 @@ def get_last_run():
     try:
         with open(LAST_RUN_FILE, "r") as f:
             last_run = json.load(f)
+        if last_run['last_timestamp'] is None:
+            last_run['last_timestamp'] = 0.0
     except FileNotFoundError:
         last_run = {}
 
