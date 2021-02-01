@@ -322,7 +322,7 @@ def render_month(date):
     dates = []
     days = []
     current_date = date.replace(day=1)
-    while current_date.month == date.month and current_date < NOW + DAY:
+    while current_date.month == date.month and current_date < NOW:
         dates.append(current_date)
         days.append(str(current_date.day).zfill(2))
         days_datas.append(read_day_data(current_date))
