@@ -116,6 +116,9 @@ def fuse_dicts(ad, bd):
 
         if isinstance(a, dict):
             t[k] = fuse_dicts(a, b)
+        elif isinstance(b, dict):
+            # Upgrade case
+            t[k] = b
         else:
             t[k] = a + b
     return t
@@ -347,11 +350,12 @@ def render_month(date):
                                 traffic_data=get_traffic_data(days_datas),
                                 dates=dates,
                                 days=days))
+    print("Generated", output_file)
 
     with open(output_json, "w") as f:
         json.dump(month_data, f)
 
-    print("Generated", output_file)
+    print("Generated", output_json)
 
 
 def render_day(date):
