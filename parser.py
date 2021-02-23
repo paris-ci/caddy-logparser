@@ -22,6 +22,7 @@ from collections import Counter
 from copy import deepcopy
 from jinja2 import Environment, PackageLoader, select_autoescape
 from user_agents import parse as parse_ua
+from urllib.parse import urlparse
 
 
 env = Environment(
@@ -39,6 +40,7 @@ COLLECT_COUNTERS = {
     "status": Counter(),
     "path_types": Counter(),
     "duration_ranges": Counter(),
+    "referers": Counter(),
     "hits": 0,
     "pages": 0,
 }
@@ -163,6 +165,7 @@ def agregate_requests_data(it, end):
         rq_status = rq["status"]
         rq_duration = rq["duration"]
         rq_ua = rq["request"].get("headers", {}).get("User-Agent", [""])[0]
+        rq_ref = rq["request"].get("headers", {}).get("Referer", [""])[0]
         rq_path = rq["request"]["uri"]
         if rq_path.startswith("/static"):
             rq_path_type = "/static"
@@ -198,6 +201,10 @@ def agregate_requests_data(it, end):
         ret[rq_type]["hits"] += 1
         if rq_is_page:
             ret[rq_type]["pages"] += 1
+
+        if rq_ref:
+            domain = urlparse(rq_ref).netloc
+            ret[rq_type]["referers"][domain] += 1
 
         ret["ua_tops"][rq_ua] += 1
 
@@ -317,6 +324,7 @@ def get_traffic_data(days_datas):
 def render_month(date):
     output_dir = OUTPUT_DIR / str(date.year).zfill(4) / str(date.month).zfill(2)
     output_file = output_dir / "index.html"
+    output_json = OUTPUT_DIR / str(date.year).zfill(4) / (str(date.month).zfill(2) + ".json")
 
     days_datas = []
     dates = []
@@ -339,6 +347,10 @@ def render_month(date):
                                 traffic_data=get_traffic_data(days_datas),
                                 dates=dates,
                                 days=days))
+
+    with open(output_json, "w") as f:
+        json.dump(month_data, f)
+
     print("Generated", output_file)
 
 
