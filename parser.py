@@ -174,6 +174,8 @@ def agregate_requests_data(it, end):
             rq_path_type = "/static"
         elif "assets" in rq_path:
             rq_path_type = "*asset*"
+        elif rq_path.startswith("/images"):
+            rq_path_type = "/images"
         else:
             path_elements = rq_path.split('/')
             elements_types = []
